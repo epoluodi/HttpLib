@@ -105,6 +105,8 @@
     NSHTTPURLResponse* urlResponse = nil;
     NSError *error = [[NSError alloc] init];
     //同步提交:POST提交并等待返回值（同步），返回值是NSData类型。
+    
+    
     NSData *responseData = [NSURLConnection sendSynchronousRequest:request returningResponse:&urlResponse error:&error];
     
     if (error.code !=0)
@@ -126,6 +128,61 @@
     }
 }
 
+static CFArrayRef certs;
+
+
+
+
+//证书认证
+-(void)connection:(NSURLConnection *)connection willSendRequestForAuthenticationChallenge:(NSURLAuthenticationChallenge *)challenge
+{
+
+    NSLog(@"开始验证");
+    if (!certs) {
+        NSData*certData =[NSData dataWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"tomcat" ofType:@"cer"]];
+        SecCertificateRef rootcert =SecCertificateCreateWithData(kCFAllocatorDefault,CFBridgingRetain(certData));
+        const void *array[1] = { rootcert };
+        certs = CFArrayCreate(NULL, array, 1, &kCFTypeArrayCallBacks);
+        CFRelease(rootcert);    // for completeness, really does not matter
+    }
+    
+    SecTrustRef trust = [[challenge protectionSpace] serverTrust];
+    int err;
+    SecTrustResultType trustResult = 0;
+    err = SecTrustSetAnchorCertificates(trust, certs);
+    if (err == noErr) {
+        err = SecTrustEvaluate(trust,&trustResult);
+    }
+    CFRelease(trust);
+    BOOL trusted = (err == noErr) && ((trustResult == kSecTrustResultProceed)||(trustResult == kSecTrustResultConfirm) || (trustResult == kSecTrustResultUnspecified));
+    
+    if (trusted) {
+        [challenge.sender useCredential:[NSURLCredential credentialForTrust:challenge.protectionSpace.serverTrust] forAuthenticationChallenge:challenge];
+    }else{
+        [challenge.sender cancelAuthenticationChallenge:challenge];
+    }
+}
+//
+//-(void)connection:(NSURLConnection *)connection didReceiveAuthenticationChallenge:(NSURLAuthenticationChallenge *)challenge
+//{
+//    if (([challenge.protectionSpace.authenticationMethod
+//                     isEqualToString:NSURLAuthenticationMethodServerTrust])) {
+//                 if ([challenge.protectionSpace.host isEqualToString:@""]) {//TRUSTED_HOST主机名
+//                         NSLog(@"Allowing bypass...");
+//                         NSURLCredential *credential = [NSURLCredential credentialForTrust:
+//                                                                                            challenge.protectionSpace.serverTrust];
+//                         [challenge.sender useCredential:credential
+//                                             forAuthenticationChallenge:challenge];
+//                     }
+//             }
+//     [challenge.sender continueWithoutCredentialForAuthenticationChallenge:challenge];
+//}
+//
+//-(BOOL)connection:(NSURLConnection *)connection canAuthenticateAgainstProtectionSpace:(NSURLProtectionSpace *)protectionSpace
+//{
+//    return [protectionSpace.authenticationMethod isEqualToString:NSURLAuthenticationMethodServerTrust];
+//}
+
 
 -(NSString *)httprequestForGet:(NSString *)url
 {
@@ -139,22 +196,29 @@
     {
         [self addHead:request];
     }
-    
+
     
     //定义
     NSHTTPURLResponse* urlResponse = [[NSHTTPURLResponse alloc] init];
-    NSError *error = [[NSError alloc] init];
+    NSError *error =[[NSError alloc] init];
     //同步提交:POST提交并等待返回值（同步），返回值是NSData类型。
-    NSData *responseData = [NSURLConnection sendSynchronousRequest:request returningResponse:&urlResponse error:&error];
     
-    if (error.code !=0)
+//    NSURLConnection *connection = [[NSURLConnection alloc] initWithRequest:request delegate:self];
+//   NSURLConnection * connection =[NSURLConnection connectionWithRequest:request delegate:self];
+    
+
+    NSData *responseData = [NSURLConnection sendSynchronousRequest:request returningResponse:&urlResponse error:&error];
+ 
+    if (error.code !=0){
+        NSLog(@"错误:%@",error);
         return nil;
+    }
     NSLog(@"get 请求返回  %d",(int)urlResponse.statusCode);
     if (urlResponse.statusCode ==200)
     {
-        //        NSStringEncoding gbkEncoding = CFStringConvertEncodingToNSStringEncoding(kCFStringEncodingGB_18030_2000);
+                NSStringEncoding gbkEncoding = CFStringConvertEncodingToNSStringEncoding(kCFStringEncodingGB_18030_2000);
         NSString *result = [[NSString alloc] initWithData:responseData encoding:NSUTF8StringEncoding];
-        //        NSLog(@"返回数据：%@",result);
+                NSLog(@"返回数据：%@",result);
         return result;
     }
     
@@ -195,7 +259,6 @@
     
     return responseData;
 }
-
 
 
 

@@ -10,6 +10,7 @@
 		7BF75B8E1D7C2E6700CB03A2 /* info.h in Headers */ = {isa = PBXBuildFile; fileRef = B45A21381BD48812001CF802 /* info.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		7BF75B8F1D7C2E6700CB03A2 /* HttpClass.h in Headers */ = {isa = PBXBuildFile; fileRef = B45A21321BD487E5001CF802 /* HttpClass.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		7BF75B901D7C2E6700CB03A2 /* ReturnData.h in Headers */ = {isa = PBXBuildFile; fileRef = B45A21351BD4880C001CF802 /* ReturnData.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		B40FBA6E1DDAAB3100EEF1F4 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B40FBA6D1DDAAB3100EEF1F4 /* Security.framework */; };
 		B45A21341BD487E5001CF802 /* HttpClass.m in Sources */ = {isa = PBXBuildFile; fileRef = B45A21331BD487E5001CF802 /* HttpClass.m */; };
 		B45A21371BD4880C001CF802 /* ReturnData.m in Sources */ = {isa = PBXBuildFile; fileRef = B45A21361BD4880C001CF802 /* ReturnData.m */; };
 /* End PBXBuildFile section */
@@ -27,6 +28,8 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		B40FBA6D1DDAAB3100EEF1F4 /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
+		B40FBA701DDAAB7F00EEF1F4 /* tomcat.cer */ = {isa = PBXFileReference; lastKnownFileType = file; path = tomcat.cer; sourceTree = "<group>"; };
 		B45A21261BD48709001CF802 /* libHttpLib.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libHttpLib.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		B45A21321BD487E5001CF802 /* HttpClass.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HttpClass.h; sourceTree = "<group>"; };
 		B45A21331BD487E5001CF802 /* HttpClass.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HttpClass.m; sourceTree = "<group>"; };
@@ -40,17 +43,35 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B40FBA6E1DDAAB3100EEF1F4 /* Security.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		B40FBA6C1DDAAB3100EEF1F4 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				B40FBA6D1DDAAB3100EEF1F4 /* Security.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		B40FBA6F1DDAAB6700EEF1F4 /* cer */ = {
+			isa = PBXGroup;
+			children = (
+				B40FBA701DDAAB7F00EEF1F4 /* tomcat.cer */,
+			);
+			name = cer;
+			sourceTree = "<group>";
+		};
 		B45A211D1BD48709001CF802 = {
 			isa = PBXGroup;
 			children = (
 				B45A21281BD48709001CF802 /* HttpLib */,
 				B45A21271BD48709001CF802 /* Products */,
+				B40FBA6C1DDAAB3100EEF1F4 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -65,6 +86,7 @@
 		B45A21281BD48709001CF802 /* HttpLib */ = {
 			isa = PBXGroup;
 			children = (
+				B40FBA6F1DDAAB6700EEF1F4 /* cer */,
 				B45A21381BD48812001CF802 /* info.h */,
 				B45A21321BD487E5001CF802 /* HttpClass.h */,
 				B45A21331BD487E5001CF802 /* HttpClass.m */,
@@ -187,7 +209,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
@@ -223,7 +245,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
 				VALIDATE_PRODUCT = YES;
