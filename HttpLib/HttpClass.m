@@ -57,6 +57,8 @@
 }
 
 -(NSData*)dataEncodeDictionary:(NSDictionary*)dictionary {
+    if (!dictionary)
+        return nil;
     [mutableArrary removeAllObjects];
     for (NSString *key in dictionary) {
         id encodedValue = [dictionary objectForKey:key] ;
